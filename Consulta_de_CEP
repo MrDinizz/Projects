@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CONSULTA CEP</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      text-align: center;
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    section {
+      margin: auto;
+      width: 300px;
+      height: 300px;
+      background-color: brown;
+      border-radius: 10px;
+      box-shadow: black 0px 5px 12px;
+    }
+
+    .parte-principal {
+      padding-top: 40px;
+      color: white;
+    }
+
+    #user-inputs {
+      text-align: center;
+    }
+
+    input {
+      width: 200px;
+    }
+
+    input, button {
+      border-color: transparent;
+    }
+
+    #resultado {
+      padding-left: 40px;
+      text-align: left;
+    }
+
+    footer {
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <header><h1>CONSULTA DE CEP</h1></header>
+
+  <section>
+    <div class="parte-principal" id="user-inputs">
+      <input type="text" id="input-cep">
+      <button onclick="buscaDeCEP()">ENVIAR</button>
+    </div>
+
+    <div class="parte-principal" id="resultado"></div>
+  </section>
+
+  <footer><i>@MrDinizz</i></footer>
+
+  <script>
+    
+    function buscaDeCEP() {
+      let cepDoUser = window.document.getElementById('input-cep').value.replace('-', '');
+      let resultado = window.document.getElementById('resultado')
+
+      window
+        .fetch('https://viacep.com.br/ws/' + cepDoUser + '/json/')
+        .then(function(dados){
+          dados.json()
+            .then(function(endereco){
+              if(endereco.erro) {
+                resultado.innerHTML = 'CEP não reconhecido'
+              }
+              else if(!(endereco.bairro == "")){
+                resultado.innerHTML = `CIDADE: ${endereco.localidade}<br>ESTADO: ${endereco.uf}<br>BAIRRO: ${endereco.bairro}`;
+              }
+              else {
+                resultado.innerHTML = `CIDADE: ${endereco.localidade}<br>ESTADO: ${endereco.uf}`;
+              }
+            })
+        })
+        .catch(function(){
+          resultado.innerHTML = 'CEP não reconhecido';
+        })
+
+    }
+  </script>
+</body>
+</html>
